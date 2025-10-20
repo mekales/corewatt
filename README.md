@@ -1,4 +1,4 @@
-Ohjelma on suunniteltu toimimaan kotirverkossa eikä sitä sellaisenaan ole turvallista avata juliseen verkkoon.
+Ohjelma on suunniteltu toimimaan kotirverkossa eikä sitä sellaisenaan ole turvallista avata julkiseen verkkoon.
 
 Backend hakee päivän pörssisähkön hintatiedot ja lähettää joka vartti ilmalämpöpumpulle lämpötilan johon pumppu halutaan.
 Ohjelma toimii ensisijaisesti Daikinin ilmalämpöpumpuilla ja Daikin APIn toimintaan saamisesta löytyy dokumentaatio Daikinin sivuilta
