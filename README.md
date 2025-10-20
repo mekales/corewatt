@@ -19,12 +19,9 @@ backend ei ole riippuvainen frontendistä eli frontendiä ei ole pakko käyttä�
 2. Lataa riippuvuudet
     `npm install`
 
-3. Luo HTTPS-tiedostot
-    Backendin juureen täytyy tehdä tiedostot selfsigned.crt ja selfsigned.key, jotta https yhteys palvelimeen saadaan onnistumaan. 
-    Ainakin Daikinin API vaatii tätä https yhteyttä.
+3. Luo HTTPS-tiedostot. Backendin juureen täytyy luoda tiedostot `selfsigned.crt` ja `selfsigned.key` tietoineen, jotta https yhteys palvelimeen saadaan onnistumaan. Ainakin Daikinin API vaatii https yhteyttä.
 
-4. Luo .env tiedosto .env.example mukaisesti
-    siihen laitetaan Daikinin Developer Portalista saatava secret key.
+4. Luo .env tiedosto .env.example mukaisesti. Siihen laitetaan Daikinin Developer Portalista saatava secret key.
 
 5. Muokkaa config.json tiedosto
   `"clientID": "YOUR_CLIENT_ID",`                Tähän kohtaan Daikinin Developer Portalista saatava Reference ID
