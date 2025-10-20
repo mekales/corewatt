@@ -1,0 +1,14 @@
+# Node.js riippuvuudet
+node_modules/
+
+# Ympäristömuuttujat
+.env
+.crt
+.key
+token.json
+devicesData.json
+schedule.json
+
+# OS-/editorin turhat tiedostot
+.DS_Store
+*.log
