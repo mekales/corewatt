@@ -7,11 +7,11 @@ Ohjelman voi muokata toimimaan myös muilla merkeillä kunhan niihin saadaan luo
 Frontend käyttää react + vite yhdistelmää, joka luo sivun, josta näkee visuaalisesti milloin pumppu lämmittää, ylläpitää ja teholämmittää.
 backend ei ole riippuvainen frontendistä eli frontendiä ei ole pakko käyttää, jos haluaa vain suorittaa ohjelman päätehtävää.
 
-========================
-Ohjelman käyttöönotto
-========================
 
-Backend:
+# Ohjelman käyttöönotto
+
+
+## Backend:
 
 1. Mene oikeaan hakemistoon
     cd backend
@@ -50,7 +50,7 @@ Lisäksi:
 
 VALMIS
 
-Frontend:
+## Frontend:
 
 1. Mene frontend hakemistoon
     cd corewatt-frontend
