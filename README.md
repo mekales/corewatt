@@ -1,16 +1,18 @@
-Ohjelma on suunniteltu toimimaan kotirverkossa eikä sitä sellaisenaan ole turvallista avata juliseen verkkoon.
 
-Backend hakee päivän pörssisähkön hintatiedot ja lähettää joka vartti ilmalämpöpumpulle lämpötilan johon pumppu halutaan.
-Ohjelma toimii ensisijaisesti Daikinin ilmalämpöpumpuilla ja Daikin APIn toimintaan saamisesta löytyy dokumentaatio Daikinin sivuilta
-Ohjelman voi muokata toimimaan myös muilla merkeillä kunhan niihin saadaan luotua vastaava API yhteys. 
+Ohjelma on suunniteltu toimimaan kotirverkossa eikä sitä sellaisenaan ole turvallista avata julkiseen verkkoon.
+
+Backend hakee päivän pörssisähkön hintatiedot ja lähettää aina lämmityslämpötilan muuttuessa ilmalämpöpumpulle lämpötilan johon pumppu halutaan.
+Ohjelma toimii ensisijaisesti Daikinin ilmalämpöpumpuilla ja Daikin APIn toimintaan saamisesta löytyy dokumentaatio Daikinin sivuilta.
+Ohjelman voi muokata toimimaan myös muilla merkeillä kunhan niihin saadaan luotua vastaavanlainen API yhteys. 
 
 Frontend käyttää react + vite yhdistelmää, joka luo sivun, josta näkee visuaalisesti milloin pumppu lämmittää, ylläpitää ja teholämmittää.
 backend ei ole riippuvainen frontendistä eli frontendiä ei ole pakko käyttää, jos haluaa vain suorittaa ohjelman päätehtävää.
 
-
 # Ohjelman käyttöönotto
 
+
 ## Backend:
+
 
 1. Mene oikeaan hakemistoon
     `cd backend`
@@ -50,6 +52,7 @@ Lisäksi:
 VALMIS
 
 ## Frontend:
+<img align="right" width="250" src="https://github.com/user-attachments/assets/0ed973aa-e590-434b-bbe7-bd39f4a9d44b" alt="CoreWatt iPhone preview">
 
 1. Mene frontend hakemistoon
     `cd corewatt-frontend`
@@ -65,4 +68,3 @@ Nyt frontendin voi ajaa kehittäjätilassa tai rakentaa tuotantoversion.
 
 4. Kehittäjätilassa
     `npm run dev`
-
