@@ -9,7 +9,6 @@ import cron from 'node-cron';
 async function scheduleTasks() {
   cron.schedule('0 0 * * *', () => {
     pumpTimer.createSchedule();
-    routes.setTemp();
   });
   cron.schedule('0,15,30,45 * * * *', () => {
     routes.setTemp();
@@ -27,12 +26,12 @@ const handler = (req, res) => {
     return;
   }
 
-  if(req.url === '/getDevices') routes.getDevices(req,res);
-  else if(req.url === '/schedule') routes.showSchedule(req,res);
-  else if(req.url === '/setPause') routes.setPause(req,res);
-  else if(req.url === '/removePause') routes.removePause(req,res);
-  else if(req.url === '/showConfig') routes.showConfig(req,res);
-  else if(req.url === '/pumpStatus') routes.pumpStatus(req,res);
+  if (req.url === '/getDevices') routes.getDevices(req, res);
+  else if (req.url === '/schedule') routes.showSchedule(req, res);
+  else if (req.url === '/setPause') routes.setPause(req, res);
+  else if (req.url === '/removePause') routes.removePause(req, res);
+  else if (req.url === '/showConfig') routes.showConfig(req, res);
+  else if (req.url === '/pumpStatus') routes.pumpStatus(req, res);
   else {
     res.writeHead(404);
     res.end('page not found');
@@ -65,30 +64,40 @@ for (const name of Object.keys(interfaces)) {
   }
 }
 
-async function startFunction(){
-  let err=0;
-  try{
+async function startFunction() {
+  let err = 0;
+
+  try {
     await pumpTimer.createSchedule();
-  } catch (error){
-    err=1;
+  } catch (error) {
+    err = 1;
     console.error("pumpTimer.createSchedule error:", error);
   }
 
-  try{
+  try {
     await routes.saveGetDevices();
-  } catch (error){
-    err=2;
+  } catch (error) {
+    err = 2;
     console.error("routes.saveGetDevices error:", error);
   }
 
-  if(err != 0){
+  if (err != 0) {
     console.log("Ohjelma ei toimi odotetulla tavalla. Ohjelma pysäytetty tähän virhetilaan.");
-    while(err != 0){
-      console.log("ERR:", err,);
+    while (err != 0) {
+      console.log("ERR:", err);
       await new Promise(r => setTimeout(r, 50000)); // printtaa 5 sek välein
     }
   }
+
+  // Ensimmäinen käynnistys: asetetaan lämpötila lähimmän vartin mukaan
+  try {
+    console.log("Odotetaan 5 sekuntia ennen ensimmäistä lämpötilapyyntöä...");
+    await new Promise(r => setTimeout(r, 5000)); // 5 sekunnin viive
+    await routes.setTemp(true);
+  } catch (error) {
+    console.error("Ensimmäinen setTemp epäonnistui:", error);
+  }
 }
 
-await startFunction()
+await startFunction();
 scheduleTasks();

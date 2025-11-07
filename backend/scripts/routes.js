@@ -37,50 +37,73 @@ async function saveGetDevices() {
 }
 
 
-async function setTemp() {
+async function setTemp(initial = false) {
     try {
-        // console.log('Settemp aktivoitu');
-        // Lue JSON-tiedosto
         const jsonData = JSON.parse(fs.readFileSync('./schedule.json', 'utf8'));
         const configData = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
-        // Hae nykyinen aika
-        // Muodostetaan aika Suomen aikavyöhykkeelle
-        // const now = new Date();
-        // const currentHour = now.toISOString().slice(0, 13); // Muodossa YYYY-MM-DDTHH
-        const day = new Date();
-        const startTime = new Date(configData.Pause.Start)
-        const endTime = new Date(configData.Pause.End)
+        const now = new Date();
 
-        if(day >= startTime && day < endTime){
-            console.log("Tauko päällä")
+        // Pyöristetään aika lähimpään alempaan varttiin (esim. 15:02 → 15:00)
+        const roundedMinutes = Math.floor(now.getMinutes() / 15) * 15;
+        now.setMinutes(roundedMinutes, 0, 0);
+
+        const startTime = new Date(configData.Pause.Start);
+        const endTime = new Date(configData.Pause.End);
+
+        // Jos ollaan tauolla
+        if (now >= startTime && now < endTime) {
+            console.log("Tauko päällä");
             return;
         }
 
+        // Muodostetaan aikaleima muodossa YYYY-MM-DDTHH:MM
+        const pad = (n) => String(n).padStart(2, '0');
+        const currentTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        console.log("\nAika:", currentTime);
 
-        const datePart = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
-        const hourPart = `T${String(day.getHours()).padStart(2, '0')}`;
-        const minutePart = `:${String(day.getMinutes()).padStart(2, '0')}`;
-        const currentTime = datePart + hourPart+minutePart;
-        console.log('');
-        console.log(currentTime);
+        // Etsitään nykyinen entry
+        const currentEntry = jsonData.today.find(e => e.aikaleima_suomi === currentTime);
 
-        // Etsi lämpötila JSONista
-        const currentEntry = await jsonData.today.find(entry => entry.aikaleima_suomi.startsWith(currentTime));
-        
         if (!currentEntry) {
-            console.log('Ei lämpötilatietoja tälle tunnille.');
+            console.log("Ei lämpötilatietoja tälle ajalle.");
             return;
         }
-        
-        //test.setTestTemp(currentEntry)
-        daikin.setDaikinTemp(currentEntry)
 
-        
+        // Jos initial = true → tee pyyntö heti
+        if (initial) {
+            console.log("Ensimmäinen käynnistys – asetetaan lämpötila:", currentEntry.setTempValue);
+            daikin.setDaikinTemp(currentEntry);
+            return;
+        }
+
+        // Etsitään edellinen vartti
+        const prev = new Date(now.getTime() - 15 * 60 * 1000);
+        const prevTime = `${prev.getFullYear()}-${pad(prev.getMonth() + 1)}-${pad(prev.getDate())}T${pad(prev.getHours())}:${pad(prev.getMinutes())}`;
+
+        const prevEntry = jsonData.today.find(e => e.aikaleima_suomi === prevTime);
+
+        // Jos ei löydy (esim. klo 00:00) → tee pyyntö joka tapauksessa
+        if (!prevEntry) {
+            console.log("Edellistä varttia ei löytynyt – asetetaan lämpötila:", currentEntry.setTempValue);
+            daikin.setDaikinTemp(currentEntry);
+            return;
+        }
+
+        // Vertaa nykyistä ja edellistä
+        if (currentEntry.setTempValue !== prevEntry.setTempValue) {
+            console.log(`Lämpötila muuttuu (${prevEntry.setTempValue} → ${currentEntry.setTempValue}) – asetetaan uusi.`);
+            daikin.setDaikinTemp(currentEntry);
+        } else {
+            console.log(`Lämpötila pysyy samana (${currentEntry.setTempValue}), ei tehdä mitään.`);
+        }
+
     } catch (error) {
-        console.error('Virhe lämpötilan asetuksessa:', error.message);
+        console.error("Virhe lämpötilan asetuksessa:", error.message);
     }
 }
+
+
 
 
 async function showSchedule(req,res){
