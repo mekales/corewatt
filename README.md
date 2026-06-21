@@ -60,7 +60,7 @@ VALMIS
 2. Lataa riippuvuudet
     `npm install`
 
-3. Muokkaa config.js
+3. Muokkaa config.js \n
     Kotiverkon apiUrl tulee olla sama kuin backendissä
     Tailnetin apiUrl voi pysyä oletuksena tai vaihtaa oikeaksi
 
